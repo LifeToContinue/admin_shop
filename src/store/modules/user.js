@@ -1,35 +1,32 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+// import router from '@/router'
 import { resetRouter } from '@/router'
 
-const getDefaultState = () => {
-  return {
-    token: getToken(),
-    name: '',
-    avatar: ''
-  }
+
+const state = {
+  token: localStorage.getItem('token_key'),
+  name: '',
+  avatar: ''
 }
 
-const state = getDefaultState()
-
 const mutations = {
-  RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
+  RESET_STATE(state){
+    state.token='',
+    state.name='',
+    state.avatar=''
   },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_USERINFO(state,userInfo){
+    state.name=userInfo.name,
+    state.avatar=userInfo.avatar
   }
 }
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  /* login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
@@ -41,10 +38,22 @@ const actions = {
         reject(error)
       })
     })
+  }, */
+  async login({commit},userInfo){
+    const {username,password} = userInfo
+    const result = await login({ username: username.trim(), password: password })
+    if(result.code === 200 || result.code === 20000){
+      const { data } = result
+      commit('SET_TOKEN', data.token)
+      localStorage.setItem('token_key',data.token)
+      return 'OK'
+    }else{
+      return Promise.reject(new Error('failed'))
+    }
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  
+  /* getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
@@ -62,10 +71,20 @@ const actions = {
         reject(error)
       })
     })
+  }, */
+  // get user info
+  async getInfo({ commit, state }){
+    const result = await getInfo(state.token)
+    if(result.code === 200 || result.code === 20000){
+      const { data } = result
+      commit('SET_USERINFO',data)
+      return "OK"
+    }else{
+      return Promise.reject(new Error('failed'))
+    }
   },
 
-  // user logout
-  logout({ commit, state }) {
+  /* logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
@@ -76,16 +95,31 @@ const actions = {
         reject(error)
       })
     })
+  }, */
+  // user logout
+  async logout({ commit,state,dispatch }){
+    const result = await logout(state.token)
+    if(result.code === 200 || result.code === 20000){
+      dispatch('resetToken')
+      resetRouter()
+      return 'ok'
+    }else{
+      return Promise.reject(new Error('failed'))
+    }
   },
 
   // remove token
-  resetToken({ commit }) {
+  async resetToken({ commit }) {
+    localStorage.removeItem('token_key')
+    commit('RESET_STATE')
+  }
+  /* resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()
     })
-  }
+  } */
 }
 
 export default {
