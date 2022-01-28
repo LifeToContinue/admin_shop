@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
+// element-ui的完整引入
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
@@ -14,6 +15,21 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import '@/plugins/vcharts'
+
+
+import *  as API  from '@/api'
+import CategorySelector from '@/components/CategorySelector'
+import HintButton from '@/components/HintButton'
+
+import {hasBtnPermission} from '@/utils/permission'
+
+
+// {
+//   trademark,
+//   attr
+// }
+
 
 /**
  * If you don't want to use mock-server
@@ -34,6 +50,11 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.prototype.$API = API
+Vue.component('CategorySelector',CategorySelector)
+Vue.component('HintButton',HintButton)
+Vue.prototype.$hasBP = hasBtnPermission //把检测按钮权限的函数挂在原型上
+
 
 new Vue({
   el: '#app',

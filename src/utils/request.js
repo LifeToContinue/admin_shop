@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-// import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // 进程根据环境，自动去配置基础路径，上项目的两个配置文件当中去找响应的环境变量
+  baseURL: process.env.VUE_APP_BASE_API, // 如果是开发环境写的是/dev-api
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 20000 // request timeout
 })
@@ -46,6 +46,7 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
+    // 加上&& res.code !== 200 原因是我们自己的接口，返回的数据状态是200代表成功
     if (res.code !== 20000 && res.code !== 200) {
       Message({
         message: res.message || 'Error',

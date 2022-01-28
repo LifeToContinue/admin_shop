@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+// js-cookie包可以让我们方便去操作cookies
 
 const TokenKey = 'vue_admin_template_token'
 

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">后台管理系统</h3>
+        <h3 class="title">登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,7 +41,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -58,10 +58,10 @@ import { validUsername } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
-    //自定义表单验证规则对收集的用户名和密码进行表单验证
+    // 自定义表单验证规则对收集的用户名和密码进行表单验证
 
     const validateUsername = (rule, value, callback) => {
-      if (value.length<5) {
+      if (value.length < 5) {
         callback(new Error('用户名长度不能小于5'))
       } else {
         callback()
@@ -183,7 +183,7 @@ $light_gray:#eee;
   min-height: 100%;
   width: 100%;
   background-color: $bg;
-  background-image: url(~@/assets/bg.jpg);
+  background-image: url(~@/assets/16.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
